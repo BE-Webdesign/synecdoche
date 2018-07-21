@@ -2,15 +2,22 @@
   "name": "synecdoche",
   "version": "0.0.0",
   "description": "JavaScript powered WordPress theme, using WordPress REST API.",
-  "main": "index.js",
+  "main": "src/index.js",
   "dependencies": {
     "@cycle/dom": "^20.4.0",
     "@cycle/run": "^4.4.0",
     "xstream": "^11.7.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.0.0-beta.54",
+    "@babel/preset-env": "^7.0.0-beta.54",
+    "babel-loader": "^7.1.5",
+    "webpack": "^4.16.1"
+  },
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "build": "webpack",
+    "watch": "webpack --watch"
   },
   "repository": {
     "type": "git",
@@ -19,6 +26,14 @@
   "keywords": [
     "WordPress"
   ],
+  "babel": {
+    "presets": [
+      "@babel/env"
+    ]
+  },
+  "bin": {
+    "webpack": "./node_modules/.bin/webpack"
+  },
   "author": "Edwin Cromley",
   "license": "GPL-3.0",
   "bugs": {
