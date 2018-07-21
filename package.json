@@ -1,0 +1,28 @@
+{
+  "name": "synecdoche",
+  "version": "0.0.0",
+  "description": "JavaScript powered WordPress theme, using WordPress REST API.",
+  "main": "index.js",
+  "dependencies": {
+    "@cycle/dom": "^20.4.0",
+    "@cycle/run": "^4.4.0",
+    "xstream": "^11.7.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BE-Webdesign/synecdoche.git"
+  },
+  "keywords": [
+    "WordPress"
+  ],
+  "author": "Edwin Cromley",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/BE-Webdesign/synecdoche/issues"
+  },
+  "homepage": "https://github.com/BE-Webdesign/synecdoche#readme"
+}
