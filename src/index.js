@@ -1,46 +1,51 @@
 import xs from 'xstream';
 import {run} from '@cycle/run';
-import {div, button, p, makeDOMDriver} from '@cycle/dom';
+import {h, div, button, p, makeDOMDriver} from '@cycle/dom';
 import {makeHTTPDriver} from '@cycle/http';
 
 const postsEndpoint = 'http://local.wordpress.test/wp-json/wp/v2/posts';
 
-function main(sources) {
-  const action$ = xs.merge(
-    sources.DOM.select('.decrement').events('click').map(ev => -1),
-    sources.DOM.select('.increment').events('click').map(ev => +1)
-  );
+function posts( posts ) {
+  return h(
+    'div',
+    { class: { posts: true } },
+    posts.map( post => h( 'div', { class: { post: true } }, [ post.title.rendered ] ) )
+  )
+}
 
+function model( posts$ ) {
+  return posts$.map( posts => ({ posts }) )
+}
+
+function view( state$ ) {
+  return state$.map( state => {
+    return h(
+      'div',
+      { class: { app: true } },
+      [
+        h( 'h1', { class: { 'app__title': true } }, [ 'Posts' ] ),
+        posts( state.posts )
+      ]
+    )
+  })
+}
+
+function main(sources) {
   const request$ = xs.of({
     url: postsEndpoint, // GET method by default
-    category: 'hello',
-  });
+    category: 'posts',
+  })
 
   const response$ = sources.HTTP
-    .select('hello')
+    .select('posts')
     .flatten()
-    .addListener({
-      next: httpResponse => {
-        // httpResponse is the object we get as response from superagent.
-        // Check the documentation in superagent to know the structure of
-        // this object.
-        console.log(httpResponse.status); // 200
-      },
-      error: (err) => {
-        // This is a network error
-        console.error(err);
-      },
-      complete: () => {},
-    })
+    .map( res => res.body )
+    .startWith( [ { title: { rendered: 'Test'} } ] )
 
-  const count$ = action$.fold((acc, x) => acc + x, 0);
-  const vdom$ = count$.map(count =>
-    div([
-      button('.decrement', 'Decrement'),
-      button('.increment', 'Increment'),
-      p('Counter: ' + count)
-    ])
-  );
+  const state$ = model( response$ )
+
+  const vdom$ = view( state$ )
+
   return {
     DOM: vdom$,
     HTTP: request$,
