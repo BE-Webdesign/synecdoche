@@ -1,8 +1,9 @@
-const webpack = require( "webpack" )
+const webpack = require( 'webpack' )
+const nodeExternals = require( 'webpack-node-externals' )
 
-module.exports = {
+const clientConfig = {
 	entry: {
-		main: './src/index.js', // front-end
+		main: './src/index.js'
 	},
 	output: {
 		path: __dirname,
@@ -19,3 +20,27 @@ module.exports = {
 		]
 	}
 }
+
+const serverConfig = {
+	entry: {
+		server: './src/server.js'
+	},
+	output: {
+		path: __dirname,
+		filename: 'dist/[name].js',
+	},
+	target: 'node',
+	externals: [ nodeExternals() ],
+	devtool: 'source-map',
+	module: {
+		rules: [
+			{
+				test: /\.js$/,
+				exclude: /(node_modules)/,
+				loader: 'babel-loader',
+			}
+		]
+	}
+}
+
+module.exports = [ serverConfig, clientConfig ]
