@@ -3,7 +3,7 @@ const nodeExternals = require( 'webpack-node-externals' )
 
 const clientConfig = {
 	entry: {
-		main: './src/index.js'
+		main: './src/client.js'
 	},
 	output: {
 		path: __dirname,
@@ -27,7 +27,7 @@ const serverConfig = {
 	},
 	output: {
 		path: __dirname,
-		filename: 'dist/[name].js',
+		filename: '[name].js',
 	},
 	target: 'node',
 	externals: [ nodeExternals() ],
