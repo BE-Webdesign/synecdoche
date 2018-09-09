@@ -69,9 +69,7 @@ server.use( function ( req, res ) {
 
 	run( wrappedAppFn, {
 		context: () => context$,
-		DOM: makeHTMLDriver( html => {console.log( html ); res.send( prependHTML5Doctype( html ) ); } ),
-		HTTP: makeHTTPDriver(),
-		PreventDefault: () => {}
+		DOM: makeHTMLDriver( html => { console.log( html ); res.send( prependHTML5Doctype( html ) ); } ),
 	} );
 } );
 

@@ -3,18 +3,24 @@ import { run } from '@cycle/run';
 import { h, div, button, p, makeDOMDriver } from '@cycle/dom';
 import { makeHTTPDriver } from '@cycle/http';
 
-const postsEndpoint = 'http://local.wordpress.test/wp-json/wp/v2/posts';
-
 function posts( posts ) {
 	return h(
 		'div',
 		{ class: { posts: true } },
-		posts.map( post => h( 'div', { class: { post: true } }, [ post.title.rendered ] ) )
+		posts.map( post )
 	)
 }
 
+function post( post ) {
+	return h( 'div', { class: { post: true } }, [ post.title.rendered ] )
+}
+
 function model( posts$ ) {
-	return posts$.map( posts => ({ posts }) )
+	return posts$.map( posts => {
+		return {
+			posts
+		}
+	} )
 }
 
 function view( state$ ) {
@@ -30,32 +36,19 @@ function view( state$ ) {
 	} )
 }
 
-function main(sources) {
-	const request$ = xs.of( {
-		url: postsEndpoint, // GET method by default
-		category: 'posts',
-	} )
-
+export default function app( sources ) {
 	const response$ = sources.HTTP
 		.select('posts')
 		.flatten()
 		.map( res => res.body )
-		.startWith( [ { title: { rendered: 'Test'} } ] )
 
 	const state$ = model( response$ )
 
+	// const vdom$ = xs.of( h( 'div', {}, 'Hello!' ) );
 	const vdom$ = view( state$ )
 
 	return {
 		DOM: vdom$,
-		HTTP: request$,
-	};
-}
-
-export default function app( sources ) {
-	const vdom$ = xs.of( h( 'div', 'Hello World!' ) );
-
-	return {
-		DOM: vdom$
+		LOG: response$
 	};
 }
